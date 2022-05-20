@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class SampleController {
 
-    @GetMapping("/sample")
+    @GetMapping("/")
     public ResponseEntity<String> sampleGet() {
         return new ResponseEntity<>("Hello World", HttpStatus.OK);
     }
