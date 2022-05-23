@@ -31,6 +31,10 @@ dependencies {
     /*테스트환경에서 Log4j2 사용*/
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    /*java8 날짜관련 라이브러리*/
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
+
 }
 
 tasks.named('test') {
