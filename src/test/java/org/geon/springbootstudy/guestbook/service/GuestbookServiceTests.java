@@ -48,6 +48,30 @@ public class GuestbookServiceTests {
 
         log.info("-----------------------------------------");
         resultDTO.getPageList().forEach(i -> log.info(i));
+    }
 
+    @Test
+    public void testSearch() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .type("tc")
+                .keyword("Sample")
+                .build();
+
+        PageResultDTO<GuestbookDTO, Guestbook> resultDTO = guestbookService.getList(pageRequestDTO);
+
+
+        log.info("PREV: " + resultDTO.isPrev());
+        log.info("NEXT: " + resultDTO.isNext());
+        log.info("TOTAL: " + resultDTO.getTotalPage());
+        log.info("-----------------------------------------");
+
+        for (GuestbookDTO guestbookDTO : resultDTO.getDtoList()) {
+            log.info(guestbookDTO);
+        }
+
+        log.info("-----------------------------------------");
+        resultDTO.getPageList().forEach(i -> log.info(i));
     }
 }
