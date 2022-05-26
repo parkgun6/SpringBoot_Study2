@@ -76,14 +76,15 @@ public class BoardController {
                          RedirectAttributes redirectAttributes) {
         log.info("post modify.................");
         log.info("dto: " + dto);
+        log.info("bno: " + dto.getBno());
 
         boardService.modify(dto);
 
-        redirectAttributes.addFlashAttribute("page", pageRequestDTO.getPage());
-        redirectAttributes.addFlashAttribute("type", pageRequestDTO.getType());
-        redirectAttributes.addFlashAttribute("keyword", pageRequestDTO.getKeyword());
+        redirectAttributes.addAttribute("page", pageRequestDTO.getPage());
+        redirectAttributes.addAttribute("type", pageRequestDTO.getType());
+        redirectAttributes.addAttribute("keyword", pageRequestDTO.getKeyword());
 
-        redirectAttributes.addFlashAttribute("bno", dto.getBno());
+        redirectAttributes.addAttribute("bno", dto.getBno());
 
         return "redirect:/board/read";
     }
