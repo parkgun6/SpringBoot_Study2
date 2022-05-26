@@ -1,6 +1,7 @@
 package org.geon.springbootstudy.board.repository;
 
 import org.geon.springbootstudy.board.entity.Board;
+import org.geon.springbootstudy.board.repository.search.SearchBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, SearchBoardRepository {
 
     // 한개의 Object 안에 Object[]로 나온다.
     // Board는 Member는 연관관계를 맺고있으므로 b.writer와 같은 형태로 사용한다.
