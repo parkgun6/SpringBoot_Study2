@@ -95,7 +95,7 @@ public class BoardRepositoryTests {
 
     @Test
     public void testSearch1() {
-        boardRepository.Search1();
+        boardRepository.search1();
     }
 
     @Test
