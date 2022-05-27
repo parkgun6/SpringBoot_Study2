@@ -50,9 +50,6 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         jpqlQuery.leftJoin(reply)
                 .on(reply.board.eq(board));
 
-        // select() 내에도 여러 객체를 가져오는 형태로 변경되었다.
-        // 이렇게 정해진 엔티티 객체 단위가 아니라 각각의 데이터를 추출하는 경우에는
-        // Tuple이라는 객체를 이용한다.
         JPQLQuery<Tuple> tuple = jpqlQuery.select(
                                         board,
                                         member.email,
@@ -97,6 +94,10 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         jpqlQuery.leftJoin(reply)
                 .on(reply.board.eq(board));
 
+        // select() 내에도 여러 객체를 가져오는 형태로 변경되었다.
+        // 이렇게 정해진 엔티티 객체 단위가 아니라 각각의 데이터를 추출하는 경우에는
+        // Tuple이라는 객체를 이용한다.
+
         // select b, w count(r) from Board b
         //      left join b.writer w
         //      left join Reply r on r.board = b
@@ -134,6 +135,15 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
 
         Sort sort = pageable.getSort();
 
+        // Pageable의 Sort 객체는 JPQLQuery의 orderBy()의 파라미터로 전달되어야 하지만,
+        // JPQL에서는 Sort객체를 지원하지 않기 때문에 orderBy()의 경우 OrderSpecifier<T extends Comparable>을 파라미터로 처리해야한다.
+        // springframework Sort는 내부적으로 여러 개의 Sort객체를 연결할수 있기 때문에 forEach를 이용해서 처리한다.
+        // OrderSpecifier에는 정렬이 필요하므로 Sort 객체의 정렬 관련 정보를 Order타입으로 처리하고,
+        // Sort 객체의 속성들은 PathBuilder라는 것을 이용해서 처리한다.
+        // PathBuilder를 생성할 때 문자열로 된 이름은 JPQLQuery를 생성할 때 이용하는 변수명과 동일해야한다.
+        // JPQLQuery를 이용해서 동적으로 검색조건을 처리하는것은 복잡하지만
+        // 한번의 개발만으로 count쿼리도 같이 처리할수 있는 장점이 있다.
+        // count를 얻는 방법은 fetchCount()를 이용하면 된다.
         sort.stream().forEach(order -> {
             Order direction = order.isAscending() ?
                     Order.ASC : Order.DESC;
@@ -142,7 +152,6 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
             PathBuilder orderByExpression = new PathBuilder(Board.class, "board");
 
             tuple.orderBy(new OrderSpecifier<>(direction, orderByExpression.get(prop)));
-
         });
 
         tuple.groupBy(board);
